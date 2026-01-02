@@ -3,112 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucky Spin – Final Stable</title>
+<title>Lucky Spin – FULL COMBINED (SYNC SOUND)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ======================================================
+   GLOBAL FONT & RESET
+====================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans Lao',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans Lao','Poppins',sans-serif}
 
-/* ================= BODY ================= */
+/* ======================================================
+   THEME VARIABLES
+====================================================== */
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --gold:#facc15;
+  --orange:#f97316;
+  --text:#e5e7eb;
+}
+
+/* ======================================================
+   BODY
+====================================================== */
 body{
   min-height:100vh;
-  background:#000 url(li.png) center/cover no-repeat;
+  background: #000 url(li.png) center / cover no-repeat;
+  color:var(--text);
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
+  overflow-x:hidden;
+}
+
+/* ======================================================
+   LAYOUT WRAP
+====================================================== */
+.page{
+  width:100%;
+  max-width:1400px;
+  padding:24px;
+  display:grid;
+  grid-template-columns: 360px 1fr 360px;
+  gap:20px;
+}
+@media(max-width:1200px){
+  .page{grid-template-columns:1fr}
+}
+
+/* ======================================================
+   PRIZE TABLE
+====================================================== */
+.prize-card{
+  background:linear-gradient(180deg,#020617,#020617) padding-box,
+             linear-gradient(135deg,var(--gold),var(--orange)) border-box;
+  border:2px solid transparent;
+  border-radius:18px;
+  box-shadow:0 30px 60px rgba(0,0,0,.5);
   overflow:hidden;
-  color:#fff;
 }
-
-/* ================= GAME SCENE ================= */
-#gameScene{
+.prize-card h2{
   text-align:center;
-  transition:transform 1.2s cubic-bezier(.2,.9,.3,1);
+  padding:16px;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:#000;
+}
+table{width:100%;border-collapse:collapse}
+th,td{padding:14px;text-align:center}
+tbody tr{background:var(--card)}
+tbody tr:not(:last-child){border-bottom:1px solid rgba(255,255,255,.06)}
+.prize-name{text-align:left;font-weight:600}
+.badge{
+  display:inline-block;padding:6px 14px;border-radius:999px;
+  background:linear-gradient(135deg,#ff9900,#ffc400);
+  color:#022c22;font-weight:700;font-size:14px
+}
+.badge.big{
+  /* background:linear-gradient(135deg,#fde047,#f59e0b); */
+  color:#422006
+}
+
+/* ======================================================
+   GAME SCENE
+====================================================== */
+#gameScene{
+  position: relative;
+  top: 100px;
+  text-align:center;
   perspective:1200px;
+  transition:transform 1.2s cubic-bezier(.2,.9,.3,1);
 }
-#gameScene.zoom-in{transform:scale(1.15) rotateX(6deg)}
-#gameScene.zoom-out{transform:scale(1) rotateX(0deg)}
+#gameScene.zoom-in{transform:scale(1.2) rotateX(6deg)}
 
-/* ================= TITLE ================= */
 h1{
-  font-size:40px;
-  margin-bottom:18px;
-  text-shadow:0 0 20px gold;
+  font-size:36px;
+  margin-bottom:12px;
+  background: linear-gradient(135deg, #ffffff, #ffffff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-/* ================= MACHINE ================= */
+/* ======================================================
+   MACHINE
+====================================================== */
 #machine{
   width:600px;
   max-width:95vw;
   height:300px;
-  background: #000 url(ccc.png) center / cover no-repeat;
+  margin:0 auto;
+  background:#000 url(ccc.png) center/cover no-repeat;
   border:3px solid #fdb42b;
   border-radius:22px;
   overflow:hidden;
   position:relative;
   box-shadow:0 0 40px rgba(255,215,0,.6);
 }
-
-/* ================= ARROW ================= */
 .red-arrow{
   position:absolute;
-  top:10%;
+  top:20%;
   left:50%;
   transform:translate(-50%,-100%);
   border-left:16px solid transparent;
   border-right:16px solid transparent;
   border-top:22px solid red;
   z-index:10;
-  pointer-events:none;
-  animation:
-    arrow-bounce .9s ease-in-out infinite,
-    arrow-wiggle 1.6s ease-in-out infinite,
-    arrow-glow 1.2s ease-in-out infinite;
+  animation:arrow-bounce .9s ease-in-out infinite;
 }
 @keyframes arrow-bounce{
   0%,100%{transform:translate(-50%,-100%)}
   50%{transform:translate(-50%,-135%)}
 }
-@keyframes arrow-wiggle{
-  0%,100%{margin-left:0}
-  25%{margin-left:-3px}
-  75%{margin-left:3px}
-}
-@keyframes arrow-glow{
-  0%,100%{filter:drop-shadow(0 0 6px red)}
-  50%{filter:drop-shadow(0 0 18px gold)}
-}
-
-/* ================= ITEMS ================= */
 #items{
-  
   display:flex;
   align-items:center;
   height:100%;
   gap:20px;
-  /* padding:0 150px; */
   will-change:transform;
 }
 .item{
-  width:200px;
-  height:200px;
-  background:#fff;
-  border-radius:16px;
-  border: rgb(255, 255, 255);
-  overflow:hidden;
-  flex-shrink:0;
+  width:200px;height:200px;
+  background:#fff;border-radius:16px;
+  overflow:hidden;flex-shrink:0
 }
-.item img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.item img{width:100%;height:100%;object-fit:cover}
 
-/* ================= BUTTON ================= */
+/* ======================================================
+   CONTROLS
+====================================================== */
 #spinBtn{
-  margin:20px 0;
+  margin:16px 0;
   padding:16px 52px;
   font-size:22px;
   border-radius:40px;
@@ -119,10 +164,9 @@ h1{
   box-shadow:0 0 25px rgba(0,0,0,.6);
 }
 #spinBtn:disabled{opacity:.5}
-
-/* ================= CODE DISPLAY ================= */
 #lione-addon-code{
-  font-size:40px;
+  display:inline-block;
+  font-size:36px;
   background:linear-gradient(135deg,#ff0000,#a30000);
   padding:10px 30px;
   border-radius:20px;
@@ -130,7 +174,9 @@ h1{
   box-shadow:0 0 40px rgba(0,0,0,.8);
 }
 
-/* ================= POPUP ================= */
+/* ======================================================
+   POPUP
+====================================================== */
 #popup{
   display:none;
   position:fixed;
@@ -152,42 +198,97 @@ h1{
 #popupBox img{width:260px;border-radius:14px}
 #popupCode{margin-top:14px;font-size:34px}
 
-/* ================= CONFETTI ================= */
+/* ======================================================
+   CONFETTI
+====================================================== */
 .confetti{
-  position:fixed;
-  width:10px;
-  height:14px;
-  top:-20px;
-  animation:fall linear forwards;
-  z-index:999;
+  position:fixed;width:10px;height:14px;top:-20px;
+  animation:fall linear forwards;z-index:999
 }
 @keyframes fall{
   to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 
-/* ================= MOBILE ================= */
+/* ======================================================
+   HISTORY
+====================================================== */
+#historyBox{
+  background:rgba(0,0,0,.6);
+  border:2px solid gold;
+  border-radius:18px;
+  padding:15px;
+}
+#historyBox h2{text-align:center;color:#ffd700;margin-bottom:8px}
+#clearHistoryBtn{
+  display:block;margin:6px auto 12px;
+  padding:8px 20px;border-radius:20px;border:none;
+  background:linear-gradient(135deg,#ff4d4d,#b30000);
+  color:#fff;cursor:pointer
+}
+.history-item{
+  align-items: center;
+  display:flex;gap:10px;margin-bottom:10px;
+  background:rgba(255,255,255,.08);
+  padding:10px;border-radius:12px
+}
+.history-item img{
+  width:60px;height:60px;object-fit:cover;
+  border-radius:10px;border:2px solid gold
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
 @media(max-width:768px){
   #machine{height:200px}
   .item{width:120px;height:120px}
-  h1{font-size:28px}
+  h1{font-size:26px}
 }
 </style>
 </head>
 
 <body>
 
-<div id="gameScene">
-  <h1>.</h1>
+<div class="page">
 
-  <div id="machine">
-    <div class="red-arrow"></div>
-    <div id="items"></div>
+  <!-- LEFT: PRIZE TABLE -->
+  <div class="prize-card">
+    <h2>🏆 ຕາຕະລາງລາງວັນ</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ລາຍການ</th>
+          <th>ຈຳນວນ</th>
+        </tr>
+      </thead>
+      <tbody id="prizeBody"></tbody>
+    </table>
   </div>
 
-  <button id="spinBtn">ເເລ່ນດ້ອມ</button>
-  <div id="lione-addon-code">LIONO----</div>
+  <!-- CENTER: GAME -->
+  <div id="gameScene">
+    <h1> ສຸ່ມລາງວັນ</h1>
+
+    <div id="machine">
+      <div class="red-arrow"></div>
+      <div id="items"></div>
+    </div>
+
+    <button id="spinBtn">ເເລ່ນດ້ອມ</button>
+    <div id="lione-addon-code">LIONO----</div>
+  </div>
+
+  <!-- RIGHT: HISTORY -->
+  <div id="historyBox">
+    <h2>📜 ປະຫວັດ</h2>
+    <button id="clearHistoryBtn">.</button>
+    <div id="historyList"></div>
+  </div>
+
 </div>
 
+<!-- POPUP -->
 <div id="popup" onclick="this.style.display='none'">
   <div id="popupBox">
     <img id="popupImg">
@@ -196,15 +297,46 @@ h1{
 </div>
 
 <script>
-/* ================= DATA ================= */
-const rewardMap = JSON.parse(localStorage.getItem("rewardMap")) || [];
-let rewardPool = JSON.parse(localStorage.getItem("rewardPool"));
-if(!rewardPool || rewardPool.length===0){
-  rewardPool = rewardMap.map((_,i)=>i);
+/* ======================================================
+   PRIZE TABLE DATA
+====================================================== */
+const prizes=[
+ {icon:"1",name:"ລົດຈັກໄຟຟ້າ (ໃຫຍ່)",qty:"1 ລາງວັນ",big:true},
+ {icon:"2",name:"ລົດຈັກໄຟຟ້າ (ນ້ອຍ)",qty:"1 ລາງວັນ"},
+ {icon:"3",name:"ເງິນສົດ 30,000,000 ກີບ",qty:"1 ລາງວັນ",big:true},
+ {icon:"4",name:"ເງິນສົດ 1,000,000 ກີບ",qty:"3 ລາງວັນ"},
+ {icon:"5",name:"ເງິນສົດ 500,000 ກີບ",qty:"4 ລາງວັນ"},
+ {icon:"6",name:"ເງິນສົດ 100,000 ກີບ",qty:"10 ລາງວັນ"}
+];
+const prizeBody=document.getElementById("prizeBody");
+prizes.forEach((p,i)=>{
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+    <td>${p.icon||i+1}</td>
+    <td class="prize-name">${p.name}</td>
+    <td><span class="badge ${p.big?'big':''}">${p.qty}</span></td>
+  `;
+  prizeBody.appendChild(tr);
+});
+
+/* ======================================================
+   DATA (ADMIN COMPATIBLE)
+====================================================== */
+const rewardMap=JSON.parse(localStorage.getItem("rewardMap"))||[
+ {code:"LIONO0001",img:"r1.jpg"},
+ {code:"LIONO0002",img:"r2.jpg"},
+ {code:"LIONO0003",img:"r3.jpg"},
+ {code:"LIONO0004",img:"r4.jpg"}
+];
+let rewardPool=JSON.parse(localStorage.getItem("rewardPool"));
+if(!rewardPool||rewardPool.length===0){
+  rewardPool=rewardMap.map((_,i)=>i);
   localStorage.setItem("rewardPool",JSON.stringify(rewardPool));
 }
 
-/* ================= ELEMENTS ================= */
+/* ======================================================
+   ELEMENTS
+====================================================== */
 const itemsEl=document.getElementById("items");
 const codeEl=document.getElementById("lione-addon-code");
 const popup=document.getElementById("popup");
@@ -212,16 +344,18 @@ const popupImg=document.getElementById("popupImg");
 const popupCode=document.getElementById("popupCode");
 const spinBtn=document.getElementById("spinBtn");
 const scene=document.getElementById("gameScene");
-const machine=document.getElementById("machine");
+const historyList=document.getElementById("historyList");
 
-/* ================= AUDIO ================= */
+/* ======================================================
+   AUDIO
+====================================================== */
 const sndLoop=new Audio("spin-loop.mp3");
 const sndWin=new Audio("win.mp3");
 sndLoop.loop=true;
-sndLoop.volume=0.8;
-sndWin.volume=1;
 
-/* ================= INIT ================= */
+/* ======================================================
+   INIT SLOT
+====================================================== */
 function initSlot(){
   itemsEl.innerHTML="";
   for(let r=0;r<4;r++){
@@ -235,12 +369,14 @@ function initSlot(){
 }
 initSlot();
 
-/* ================= RANDOM CODE ================= */
+/* ======================================================
+   RANDOM CODE
+====================================================== */
 let raf,randomRunning=false;
 function startRandomCode(){
   randomRunning=true;
   function loop(){
-    if(!randomRunning) return;
+    if(!randomRunning)return;
     codeEl.innerText="LIONO"+String(Math.floor(Math.random()*9999)).padStart(4,"0");
     raf=requestAnimationFrame(loop);
   }loop();
@@ -251,9 +387,11 @@ function stopRandomCode(code){
   codeEl.innerText=code;
 }
 
-/* ================= CONFETTI ================= */
-function confettiBurst(count=120){
-  for(let i=0;i<count;i++){
+/* ======================================================
+   CONFETTI
+====================================================== */
+function confettiBurst(n=120){
+  for(let i=0;i<n;i++){
     const c=document.createElement("div");
     c.className="confetti";
     c.style.left=Math.random()*100+"vw";
@@ -264,75 +402,57 @@ function confettiBurst(count=120){
   }
 }
 
-/* =====================================================
-   THAI READ MAP
-===================================================== */
-const thaiLetters={
- A:"เอ",B:"บี",C:"ซี",D:"ดี",E:"อี",F:"เอฟ",
- G:"จี",H:"เอช",I:"ไอ",J:"เจ",K:"เค",L:"แอล",
- M:"เอ็ม",N:"เอ็น",O:"โอ",P:"พี",Q:"คิว",
- R:"อาร์",S:"เอส",T:"ที",U:"ยู",V:"วี",
- W:"ดับเบิลยู",X:"เอ็กซ์",Y:"วาย",Z:"แซด"
-};
-const thaiNumbers={
- "0":"ศูนย์","1":"หนึ่ง","2":"สอง","3":"สาม","4":"สี่",
- "5":"ห้า","6":"หก","7":"เจ็ด","8":"แปด","9":"เก้า"
-};
-
-/* =====================================================
-   VOICE CONFIG (ปรับความเร็วที่เดียว)
-===================================================== */
-const VoiceConfig={
-  lang:"th-TH",
-  rate:1.4,
-  pitch:1.0,
-  volume:1
-};
-
-function getBestThaiVoice(){
-  const v=speechSynthesis.getVoices();
-  return v.find(x=>x.lang==="th-TH")||v[0];
-}
-
-/* =====================================================
-   BUILD TEXT (ไม่ยุ่งกับความเร็ว)
-===================================================== */
-function buildRewardText(code){
-  const readCode=code.toUpperCase().split("").map(c=>{
-    if(thaiLetters[c]) return thaiLetters[c];
-    if(thaiNumbers[c]) return thaiNumbers[c];
-    return c;
-  }).join(" ");
-  return `รหัส ${readCode} ได้รับรางวัล`;
-}
-
-/* =====================================================
-   SPEAK ENGINE
-===================================================== */
-function speakText(text){
+/* ======================================================
+   VOICE (TH)
+====================================================== */
+const thaiLetters={A:"เอ",B:"บี",C:"ซี",D:"ดี",E:"อี",F:"เอฟ",G:"จี",H:"เอช",I:"ไอ",J:"เจ",K:"เค",L:"แอล",M:"เอ็ม",N:"เอ็น",O:"โอ",P:"พี",Q:"คิว",R:"อาร์",S:"เอส",T:"ที",U:"ยู",V:"วี",W:"ดับเบิลยู",X:"เอ็กซ์",Y:"วาย",Z:"แซด"};
+const thaiNumbers={"0":"ศูนย์","1":"หนึ่ง","2":"สอง","3":"สาม","4":"สี่","5":"ห้า","6":"หก","7":"เจ็ด","8":"แปด","9":"เก้า"};
+function speakReward(code){
   if(!("speechSynthesis"in window))return;
   speechSynthesis.cancel();
-  const msg=new SpeechSynthesisUtterance(text);
-  msg.lang=VoiceConfig.lang;
-  msg.voice=getBestThaiVoice();
-  msg.rate=VoiceConfig.rate;
-  msg.pitch=VoiceConfig.pitch;
-  msg.volume=VoiceConfig.volume;
-  speechSynthesis.speak(msg);
+  const text="รหัส "+code.split("").map(c=>thaiLetters[c]||thaiNumbers[c]||c).join(" ")+" ได้รับรางวัล";
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="th-TH";u.rate=0.95;
+  speechSynthesis.speak(u);
 }
 
-function speakReward(code){
-  speakText(buildRewardText(code));
+/* ======================================================
+   HISTORY
+====================================================== */
+let rewardHistory=JSON.parse(localStorage.getItem("rewardHistory"))||[];
+function renderHistory(){
+  historyList.innerHTML="";
+  rewardHistory.slice().reverse().forEach(h=>{
+    historyList.innerHTML+=`
+      <div class="history-item">
+        <img src="${h.img}">
+        <div>${h.code}</div>
+      </div>`;
+  });
 }
+renderHistory();
+document.getElementById("clearHistoryBtn").onclick=()=>{
+  if(confirm("ລົບປະຫວັດ?")){
+    rewardHistory=[];
+    localStorage.removeItem("rewardHistory");
+    renderHistory();
+  }
+};
 
-
-/* ================= SPIN ================= */
+/* ======================================================
+   SPIN (SYNC WITH TRANSITIONEND)
+====================================================== */
 spinBtn.onclick=()=>{
-  if(rewardPool.length===0) return alert("ລາງວັນອອກຄົບແລ້ວ");
+  if(spinBtn.disabled) return;
+  if(rewardPool.length===0) return alert("ລາງວັນອອກຄົບ");
 
   spinBtn.disabled=true;
   scene.classList.add("zoom-in");
   startRandomCode();
+
+  sndLoop.pause();sndLoop.currentTime=0;
+  sndWin.pause();sndWin.currentTime=0;
+  speechSynthesis.cancel();
 
   const idx=rewardPool.splice(Math.floor(Math.random()*rewardPool.length),1)[0];
   localStorage.setItem("rewardPool",JSON.stringify(rewardPool));
@@ -342,43 +462,36 @@ spinBtn.onclick=()=>{
   itemsEl.style.transform="translateX(-30px)";
 
   setTimeout(()=>{
-    sndLoop.currentTime=0;
     sndLoop.play();
-
     const STEP=220;
-    const itemWidth=200;
-    const center=machine.offsetWidth/2;
-    const targetIndex=rewardMap.length*2+idx;
-    const stopX=targetIndex*STEP-center+itemWidth/2;
-
+    const center=document.getElementById("machine").offsetWidth/2;
+    const stopX=(rewardMap.length*2+idx)*STEP-center+100;
     itemsEl.style.transition="transform 8s cubic-bezier(.12,.9,.2,1)";
     itemsEl.style.transform=`translateX(-${stopX}px)`;
+  },50);
 
-    sndLoop.playbackRate = 1; // 🔒 ไม่สโลตลอด
+  const onEnd=()=>{
+    itemsEl.removeEventListener("transitionend",onEnd);
 
-  },80);
-
-  setTimeout(()=>{
-    sndLoop.pause();
-    sndLoop.currentTime=0;
-    sndLoop.playbackRate=1;
-
-    sndWin.pause();
-    sndWin.currentTime=0;
-    sndWin.play().catch(()=>{});
-
-    setTimeout(()=>speakReward(reward.code),900);
+    sndLoop.pause();sndLoop.currentTime=0;
+    sndWin.play();
+    setTimeout(()=>speakReward(reward.code),300);
 
     stopRandomCode(reward.code);
-    scene.classList.remove("zoom-in");
     confettiBurst();
 
     popupImg.src=reward.img;
     popupCode.innerText=reward.code;
     popup.style.display="flex";
 
+    rewardHistory.push({code:reward.code,img:reward.img});
+    localStorage.setItem("rewardHistory",JSON.stringify(rewardHistory));
+    renderHistory();
+
+    scene.classList.remove("zoom-in");
     spinBtn.disabled=false;
-  },8500);
+  };
+  itemsEl.addEventListener("transitionend",onEnd);
 };
 </script>
 
