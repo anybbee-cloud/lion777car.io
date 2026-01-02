@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Spin – Final Stable</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans Lao',sans-serif}
+
+/* ================= BODY ================= */
+body{
+  min-height:100vh;
+  background:#000 url(li.png) center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* ================= GAME SCENE ================= */
+#gameScene{
+  text-align:center;
+  transition:transform 1.2s cubic-bezier(.2,.9,.3,1);
+  perspective:1200px;
+}
+#gameScene.zoom-in{transform:scale(1.15) rotateX(6deg)}
+#gameScene.zoom-out{transform:scale(1) rotateX(0deg)}
+
+/* ================= TITLE ================= */
+h1{
+  font-size:40px;
+  margin-bottom:18px;
+  text-shadow:0 0 20px gold;
+}
+
+/* ================= MACHINE ================= */
+#machine{
+  width:600px;
+  max-width:95vw;
+  height:300px;
+  background: #000 url(ccc.png) center / cover no-repeat;
+  border:3px solid #fdb42b;
+  border-radius:22px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 0 40px rgba(255,215,0,.6);
+}
+
+/* ================= ARROW ================= */
+.red-arrow{
+  position:absolute;
+  top:10%;
+  left:50%;
+  transform:translate(-50%,-100%);
+  border-left:16px solid transparent;
+  border-right:16px solid transparent;
+  border-top:22px solid red;
+  z-index:10;
+  pointer-events:none;
+  animation:
+    arrow-bounce .9s ease-in-out infinite,
+    arrow-wiggle 1.6s ease-in-out infinite,
+    arrow-glow 1.2s ease-in-out infinite;
+}
+@keyframes arrow-bounce{
+  0%,100%{transform:translate(-50%,-100%)}
+  50%{transform:translate(-50%,-135%)}
+}
+@keyframes arrow-wiggle{
+  0%,100%{margin-left:0}
+  25%{margin-left:-3px}
+  75%{margin-left:3px}
+}
+@keyframes arrow-glow{
+  0%,100%{filter:drop-shadow(0 0 6px red)}
+  50%{filter:drop-shadow(0 0 18px gold)}
+}
+
+/* ================= ITEMS ================= */
+#items{
+  
+  display:flex;
+  align-items:center;
+  height:100%;
+  gap:20px;
+  /* padding:0 150px; */
+  will-change:transform;
+}
+.item{
+  width:200px;
+  height:200px;
+  background:#fff;
+  border-radius:16px;
+  border: rgb(255, 255, 255);
+  overflow:hidden;
+  flex-shrink:0;
+}
+.item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ================= BUTTON ================= */
+#spinBtn{
+  margin:20px 0;
+  padding:16px 52px;
+  font-size:22px;
+  border-radius:40px;
+  border:none;
+  cursor:pointer;
+  background:#fff;
+  color:red;
+  box-shadow:0 0 25px rgba(0,0,0,.6);
+}
+#spinBtn:disabled{opacity:.5}
+
+/* ================= CODE DISPLAY ================= */
+#lione-addon-code{
+  font-size:40px;
+  background:linear-gradient(135deg,#ff0000,#a30000);
+  padding:10px 30px;
+  border-radius:20px;
+  letter-spacing:6px;
+  box-shadow:0 0 40px rgba(0,0,0,.8);
+}
+
+/* ================= POPUP ================= */
+#popup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+#popupBox{
+  background:#f17500;
+  padding:26px;
+  border-radius:22px;
+  border:3px solid #fff;
+  box-shadow:0 0 40px gold;
+  text-align:center;
+}
+#popupBox img{width:260px;border-radius:14px}
+#popupCode{margin-top:14px;font-size:34px}
+
+/* ================= CONFETTI ================= */
+.confetti{
+  position:fixed;
+  width:10px;
+  height:14px;
+  top:-20px;
+  animation:fall linear forwards;
+  z-index:999;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+  #machine{height:200px}
+  .item{width:120px;height:120px}
+  h1{font-size:28px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameScene">
+  <h1>.</h1>
+
+  <div id="machine">
+    <div class="red-arrow"></div>
+    <div id="items"></div>
+  </div>
+
+  <button id="spinBtn">ເເລ່ນດ້ອມ</button>
+  <div id="lione-addon-code">LIONO----</div>
+</div>
+
+<div id="popup" onclick="this.style.display='none'">
+  <div id="popupBox">
+    <img id="popupImg">
+    <div id="popupCode"></div>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const rewardMap = JSON.parse(localStorage.getItem("rewardMap")) || [];
+let rewardPool = JSON.parse(localStorage.getItem("rewardPool"));
+if(!rewardPool || rewardPool.length===0){
+  rewardPool = rewardMap.map((_,i)=>i);
+  localStorage.setItem("rewardPool",JSON.stringify(rewardPool));
+}
+
+/* ================= ELEMENTS ================= */
+const itemsEl=document.getElementById("items");
+const codeEl=document.getElementById("lione-addon-code");
+const popup=document.getElementById("popup");
+const popupImg=document.getElementById("popupImg");
+const popupCode=document.getElementById("popupCode");
+const spinBtn=document.getElementById("spinBtn");
+const scene=document.getElementById("gameScene");
+const machine=document.getElementById("machine");
+
+/* ================= AUDIO ================= */
+const sndLoop=new Audio("spin-loop.mp3");
+const sndWin=new Audio("win.mp3");
+sndLoop.loop=true;
+sndLoop.volume=0.8;
+sndWin.volume=1;
+
+/* ================= INIT ================= */
+function initSlot(){
+  itemsEl.innerHTML="";
+  for(let r=0;r<4;r++){
+    rewardMap.forEach(rew=>{
+      const d=document.createElement("div");
+      d.className="item";
+      d.innerHTML=`<img src="${rew.img}">`;
+      itemsEl.appendChild(d);
+    });
+  }
+}
+initSlot();
+
+/* ================= RANDOM CODE ================= */
+let raf,randomRunning=false;
+function startRandomCode(){
+  randomRunning=true;
+  function loop(){
+    if(!randomRunning) return;
+    codeEl.innerText="LIONO"+String(Math.floor(Math.random()*9999)).padStart(4,"0");
+    raf=requestAnimationFrame(loop);
+  }loop();
+}
+function stopRandomCode(code){
+  randomRunning=false;
+  cancelAnimationFrame(raf);
+  codeEl.innerText=code;
+}
+
+/* ================= CONFETTI ================= */
+function confettiBurst(count=120){
+  for(let i=0;i<count;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    c.style.animationDuration=2+Math.random()*2+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* =====================================================
+   THAI READ MAP
+===================================================== */
+const thaiLetters={
+ A:"เอ",B:"บี",C:"ซี",D:"ดี",E:"อี",F:"เอฟ",
+ G:"จี",H:"เอช",I:"ไอ",J:"เจ",K:"เค",L:"แอล",
+ M:"เอ็ม",N:"เอ็น",O:"โอ",P:"พี",Q:"คิว",
+ R:"อาร์",S:"เอส",T:"ที",U:"ยู",V:"วี",
+ W:"ดับเบิลยู",X:"เอ็กซ์",Y:"วาย",Z:"แซด"
+};
+const thaiNumbers={
+ "0":"ศูนย์","1":"หนึ่ง","2":"สอง","3":"สาม","4":"สี่",
+ "5":"ห้า","6":"หก","7":"เจ็ด","8":"แปด","9":"เก้า"
+};
+
+/* =====================================================
+   VOICE CONFIG (ปรับความเร็วที่เดียว)
+===================================================== */
+const VoiceConfig={
+  lang:"th-TH",
+  rate:1.4,
+  pitch:1.0,
+  volume:1
+};
+
+function getBestThaiVoice(){
+  const v=speechSynthesis.getVoices();
+  return v.find(x=>x.lang==="th-TH")||v[0];
+}
+
+/* =====================================================
+   BUILD TEXT (ไม่ยุ่งกับความเร็ว)
+===================================================== */
+function buildRewardText(code){
+  const readCode=code.toUpperCase().split("").map(c=>{
+    if(thaiLetters[c]) return thaiLetters[c];
+    if(thaiNumbers[c]) return thaiNumbers[c];
+    return c;
+  }).join(" ");
+  return `รหัส ${readCode} ได้รับรางวัล`;
+}
+
+/* =====================================================
+   SPEAK ENGINE
+===================================================== */
+function speakText(text){
+  if(!("speechSynthesis"in window))return;
+  speechSynthesis.cancel();
+  const msg=new SpeechSynthesisUtterance(text);
+  msg.lang=VoiceConfig.lang;
+  msg.voice=getBestThaiVoice();
+  msg.rate=VoiceConfig.rate;
+  msg.pitch=VoiceConfig.pitch;
+  msg.volume=VoiceConfig.volume;
+  speechSynthesis.speak(msg);
+}
+
+function speakReward(code){
+  speakText(buildRewardText(code));
+}
+
+
+/* ================= SPIN ================= */
+spinBtn.onclick=()=>{
+  if(rewardPool.length===0) return alert("ລາງວັນອອກຄົບແລ້ວ");
+
+  spinBtn.disabled=true;
+  scene.classList.add("zoom-in");
+  startRandomCode();
+
+  const idx=rewardPool.splice(Math.floor(Math.random()*rewardPool.length),1)[0];
+  localStorage.setItem("rewardPool",JSON.stringify(rewardPool));
+  const reward=rewardMap[idx];
+
+  itemsEl.style.transition="none";
+  itemsEl.style.transform="translateX(-30px)";
+
+  setTimeout(()=>{
+    sndLoop.currentTime=0;
+    sndLoop.play();
+
+    const STEP=220;
+    const itemWidth=200;
+    const center=machine.offsetWidth/2;
+    const targetIndex=rewardMap.length*2+idx;
+    const stopX=targetIndex*STEP-center+itemWidth/2;
+
+    itemsEl.style.transition="transform 8s cubic-bezier(.12,.9,.2,1)";
+    itemsEl.style.transform=`translateX(-${stopX}px)`;
+
+    sndLoop.playbackRate = 1; // 🔒 ไม่สโลตลอด
+
+  },80);
+
+  setTimeout(()=>{
+    sndLoop.pause();
+    sndLoop.currentTime=0;
+    sndLoop.playbackRate=1;
+
+    sndWin.pause();
+    sndWin.currentTime=0;
+    sndWin.play().catch(()=>{});
+
+    setTimeout(()=>speakReward(reward.code),900);
+
+    stopRandomCode(reward.code);
+    scene.classList.remove("zoom-in");
+    confettiBurst();
+
+    popupImg.src=reward.img;
+    popupCode.innerText=reward.code;
+    popup.style.display="flex";
+
+    spinBtn.disabled=false;
+  },8500);
+};
+</script>
+
+</body>
+</html>

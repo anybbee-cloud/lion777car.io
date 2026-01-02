@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<title>Admin – Lucky Spin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap');
+
+* { font-family: 'Noto Sans Lao', sans-serif; box-sizing: border-box; }
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0a0a0a,#000);
+  color:#fff;
+  font-family:'Poppins',sans-serif;
+  padding:30px;
+}
+h1{
+  text-align:center;
+  color:#ffd700;
+  letter-spacing:2px;
+  text-shadow:0 0 20px rgba(255,215,0,.6);
+}
+#list{
+  max-width:900px;
+  margin:30px auto;
+  background:rgba(255,255,255,.05);
+  border-radius:20px;
+  padding:20px;
+}
+.row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:10px 0;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+}
+.row b{width:30px;text-align:center}
+.row img{
+  width:60px;height:60px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid gold;
+}
+input[type=text]{flex:1;padding:8px;border-radius:8px;border:none}
+button{
+  display:block;
+  margin:30px auto 0;
+  padding:14px 50px;
+  font-size:18px;
+  font-weight:600;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#00ffd5,#00bfa5);
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧑‍💼 Admin ຈັດການລາງວັນ</h1>
+<div id="list"></div>
+<button onclick="saveAll()">💾 ບັນທຶກ</button>
+
+<script>
+const list=document.getElementById("list");
+let data=JSON.parse(localStorage.getItem("rewardMap"))||[];
+
+// บังคับ 20 ช่อง
+for(let i=0;i<20;i++){
+  if(!data[i]) data[i]={code:"",img:""};
+}
+
+// render
+function render(){
+  list.innerHTML="";
+  data.forEach((item,i)=>{
+    const row=document.createElement("div");
+    row.className="row";
+    row.innerHTML=`
+      <b>${i+1}</b>
+      <input type="text" placeholder="CODE"
+        value="${item.code}"
+        oninput="data[${i}].code=this.value">
+      <input type="file" accept="image/*"
+        onchange="loadImg(event,${i})">
+      <img id="img${i}" src="${item.img}">
+    `;
+    list.appendChild(row);
+  });
+}
+render();
+
+// load image + compress
+function loadImg(e,i){
+  const f=e.target.files[0];
+  if(!f) return;
+  const img=new Image();
+  const r=new FileReader();
+  r.onload=()=>{
+    img.onload=()=>{
+      const c=document.createElement("canvas");
+      const max=400;
+      let w=img.width,h=img.height;
+      if(w>h){ if(w>max){ h*=max/w; w=max; } }
+      else{ if(h>max){ w*=max/h; h=max; } }
+      c.width=w;c.height=h;
+      c.getContext("2d").drawImage(img,0,0,w,h);
+      data[i].img=c.toDataURL("image/jpeg",0.75);
+      document.getElementById("img"+i).src=data[i].img;
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+}
+
+function saveAll(){
+  localStorage.setItem("rewardMap",JSON.stringify(data));
+  alert("✅ บันทึกเรียบร้อย");
+}
+</script>
+
+</body>
+</html>
