@@ -113,7 +113,7 @@ h1{
   max-width:95vw;
   height:300px;
   margin:0 auto;
-  background:#000 url(ccc.png) center/cover no-repeat;
+  background-color: #f17500;
   border:3px solid #fdb42b;
   border-radius:22px;
   overflow:hidden;
@@ -276,7 +276,7 @@ h1{
     </div>
 
     <button id="spinBtn">ເເລ່ນດ້ອມ</button>
-    <div id="lione-addon-code">LIONO----</div>
+    <div id="lione-addon-code">LLIONO----</div>
   </div>
 
   <!-- RIGHT: HISTORY -->
@@ -323,10 +323,10 @@ prizes.forEach((p,i)=>{
    DATA (ADMIN COMPATIBLE)
 ====================================================== */
 const rewardMap=JSON.parse(localStorage.getItem("rewardMap"))||[
- {code:"LIONO0001",img:"r1.jpg"},
- {code:"LIONO0002",img:"r2.jpg"},
- {code:"LIONO0003",img:"r3.jpg"},
- {code:"LIONO0004",img:"r4.jpg"}
+ {code:"LLIONO0001",img:"r1.jpg"},
+ {code:"LLIONO0002",img:"r2.jpg"},
+ {code:"LLIONO0003",img:"r3.jpg"},
+ {code:"LLIONO0004",img:"r4.jpg"}
 ];
 let rewardPool=JSON.parse(localStorage.getItem("rewardPool"));
 if(!rewardPool||rewardPool.length===0){
@@ -377,7 +377,7 @@ function startRandomCode(){
   randomRunning=true;
   function loop(){
     if(!randomRunning)return;
-    codeEl.innerText="LIONO"+String(Math.floor(Math.random()*9999)).padStart(4,"0");
+    codeEl.innerText="LLIONO"+String(Math.floor(Math.random()*9999)).padStart(4,"0");
     raf=requestAnimationFrame(loop);
   }loop();
 }
@@ -497,3 +497,4 @@ spinBtn.onclick=()=>{
 
 </body>
 </html>
+
