@@ -304,11 +304,11 @@ h1{
 const prizes=[
  {icon:"1",name:"ລົດຈັກໄຟຟ້າ (ໃຫຍ່)",qty:"1 ລາງວັນ",big:true},
  {icon:"2",name:"ລົດຈັກໄຟຟ້າ (ນ້ອຍ)",qty:"1 ລາງວັນ"},
- {icon:"3",name:"ເງິນສົດ 5,000,000 ກີບ",qty:"1 ລາງວັນ",big:true},
- {icon:"4",name:"ເງິນສົດ 3,000,000 ກີບ",qty:"1 ລາງວັນ"},
- {icon:"5",name:"ເງິນສົດ 1,000,000 ກີບ",qty:"3 ລາງວັນ"},
- {icon:"6",name:"ເງິນສົດ 500,000 ກີບ",qty:"4 ລາງວັນ"},
- {icon:"7",name:"ເງິນສົດ 100,000 ກີບ",qty:"10 ລາງວັນ"},
+ {icon:"3",name:"ເງິນສົດ 3,000,000 ກີບກີບ",qty:"1 ລາງວັນ",big:true},
+//  {icon:"4",name:"",qty:"1 ລາງວັນ"},
+ {icon:"4",name:"ເງິນສົດ 1,000,000 ກີບ",qty:"3 ລາງວັນ"},
+ {icon:"5",name:"ເງິນສົດ 500,000 ກີບ",qty:"4 ລາງວັນ"},
+ {icon:"6",name:"ເງິນສົດ 100,000 ກີບ",qty:"10 ລາງວັນ"},
  
 ];
 const prizeBody=document.getElementById("prizeBody");
@@ -405,19 +405,19 @@ function confettiBurst(n=120){
   }
 }
 
-/* ======================================================
-   VOICE (TH)
-====================================================== */
-const thaiLetters={A:"เอ",B:"บี",C:"ซี",D:"ดี",E:"อี",F:"เอฟ",G:"จี",H:"เอช",I:"ไอ",J:"เจ",K:"เค",L:"แอล",M:"เอ็ม",N:"เอ็น",O:"โอ",P:"พี",Q:"คิว",R:"อาร์",S:"เอส",T:"ที",U:"ยู",V:"วี",W:"ดับเบิลยู",X:"เอ็กซ์",Y:"วาย",Z:"แซด"};
-const thaiNumbers={"0":"ศูนย์","1":"หนึ่ง","2":"สอง","3":"สาม","4":"สี่","5":"ห้า","6":"หก","7":"เจ็ด","8":"แปด","9":"เก้า"};
-function speakReward(code){
-  if(!("speechSynthesis"in window))return;
-  speechSynthesis.cancel();
-  const text="รหัส "+code.split("").map(c=>thaiLetters[c]||thaiNumbers[c]||c).join(" ")+" ได้รับรางวัล";
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="th-TH";u.rate=0.95;
-  speechSynthesis.speak(u);
-}
+// /* ======================================================
+//    VOICE (TH)
+// ====================================================== */
+// const thaiLetters={A:"เอ",B:"บี",C:"ซี",D:"ดี",E:"อี",F:"เอฟ",G:"จี",H:"เอช",I:"ไอ",J:"เจ",K:"เค",L:"แอล",M:"เอ็ม",N:"เอ็น",O:"โอ",P:"พี",Q:"คิว",R:"อาร์",S:"เอส",T:"ที",U:"ยู",V:"วี",W:"ดับเบิลยู",X:"เอ็กซ์",Y:"วาย",Z:"แซด"};
+// const thaiNumbers={"0":"ศูนย์","1":"หนึ่ง","2":"สอง","3":"สาม","4":"สี่","5":"ห้า","6":"หก","7":"เจ็ด","8":"แปด","9":"เก้า"};
+// function speakReward(code){
+//   if(!("speechSynthesis"in window))return;
+//   speechSynthesis.cancel();
+//   const text="รหัส "+code.split("").map(c=>thaiLetters[c]||thaiNumbers[c]||c).join(" ")+" ได้รับรางวัล";
+//   const u=new SpeechSynthesisUtterance(text);
+//   u.lang="th-TH";u.rate=0.95;
+//   speechSynthesis.speak(u);
+// }
 
 /* ======================================================
    HISTORY
